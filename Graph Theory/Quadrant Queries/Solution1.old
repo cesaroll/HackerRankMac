@@ -1,0 +1,112 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        int n = int.Parse(Console.ReadLine());
+        var points = new int[n,2];
+        
+        //Read points
+        for(int i=0; i < n; i++) {
+            
+            var crds = Console.ReadLine().Split(' ');
+            
+            points[i,0] = int.Parse(crds[0]);
+            points[i,1] = int.Parse(crds[1]);
+            
+        }
+        
+        var opNum = int.Parse(Console.ReadLine());
+        
+        //Read Operations
+        for(int i  = 0; i < opNum; i++) {
+            var input = Console.ReadLine().Split(' ');
+            
+            Util.DoOperation(points, input[0], int.Parse(input[1]), int.Parse(input[2]));
+        }
+    }
+}
+
+public static class Util {
+    
+    public const string OpX = "X";
+    public const string OpY = "Y";
+    public const string OpC = "C";
+    
+    public static void DoOperation(int[,] points, string op, int init, int end) {
+        //Do Op using points and range
+        init--;
+        end--;
+        
+        if(op == OpX || op == OpY) {
+            DoReflection(points, op, init, end);
+        }
+        else if(op == OpC) {
+            DoCount(points, init, end);
+        }
+    }
+    
+    private static void DoReflection(int[,] points, string op, int init, int end) {
+
+        for(int i=init; i <= end; i++ ) {
+            Point.Reflect(op, points, i);
+        }
+            
+    }
+    
+    
+    private static void DoCount(int[,] points, int init, int end) {
+        
+        var quadrants = new int[4];
+        
+        for(int i=init; i<= end; i++) {
+            quadrants[Point.GetQuadrant(points, i) - 1]++;
+        }
+        
+        foreach(var i in quadrants) {
+            Console.Write(i + " ");
+        }
+        
+        Console.WriteLine();
+    }
+}
+
+public static class Point {
+    
+    
+    public static void Reflect(string op, int[,] points, int idx) {
+        if(op == Util.OpX) {
+            //Reflecting in X Axis changes Y point
+            points[idx,1] *= -1;
+        }
+        else if(op == Util.OpY) {
+            //Reflecting in Y Axis changes X Point
+            points[idx,0] *= -1;
+        }
+            
+    }
+    
+    
+    public static int GetQuadrant(int[,] points, int idx) { 
+        
+        int X = points[idx,0];
+        int Y = points[idx,1];
+        
+        if(X > 0) {
+                if(Y > 0)
+                    return 1;
+                else
+                    return 4;
+            } else {
+                if(Y > 0)
+                    return 2;
+                else
+                    return 3;
+            }
+    }
+    
+    public static void Print(int[,] points, int idx) {
+        Console.WriteLine("{0} , {1}", points[idx,0], points[idx,1]);
+    }
+}

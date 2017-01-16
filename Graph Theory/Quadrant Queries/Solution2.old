@@ -1,0 +1,122 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+    static void Main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution */
+        int n = int.Parse(Console.ReadLine());
+        var points = new SortedDictionary<int,Point>();
+        
+        //Read points
+        for(int i=0; i < n; i++) {
+            
+            var crds = Console.ReadLine().Split(' ');
+            
+            points.Add(i, new Point(int.Parse(crds[0]), int.Parse(crds[1])) );
+            
+        }
+        
+        var opNum = int.Parse(Console.ReadLine());
+        
+        //Read Operations
+        for(int i  = 0; i < opNum; i++) {
+            var input = Console.ReadLine().Split(' ');
+            
+            Util.DoOperation(points, input[0], int.Parse(input[1]), int.Parse(input[2]));
+        }
+    }
+}
+
+public static class Util {
+    
+    public const string OpX = "X";
+    public const string OpY = "Y";
+    public const string OpC = "C";
+    
+    public static void DoOperation(SortedDictionary<int,Point> points, string op, int init, int end) {
+        //Do Op using points and range
+        init--;
+        end--;
+        
+        if(op == OpX || op == OpY) {
+            DoReflection(points, op, init, end);
+        }
+        else if(op == OpC) {
+            DoCount(points, init, end);
+        }
+    }
+    
+    private static void DoReflection(SortedDictionary<int,Point> points, string op, int init, int end) {
+
+        var query = points.AsParallel()
+                    .Where(x => x.Key >= init)
+                    .Where(x => x.Key <= end);
+
+        if(op == OpX) {
+            query.ForAll(x => x.Value.ReflectInX());
+        } else if(op == OpY) {
+            query.ForAll(x => x.Value.ReflectInY());
+        }
+            
+    }
+
+    private static void DoCount(SortedDictionary<int,Point> points, int init, int end) {
+        
+        var quadrants = new int[4];
+
+        var query = points.AsParallel()
+                    .Where(x => x.Key >= init)
+                    .Where(x => x.Key <= end)
+                    .Select(x => x.Value);
+
+        query.ForAll(p => quadrants[p.Quadrant]++);
+        
+        foreach(var i in quadrants) {
+            Console.Write(i + " ");
+        }
+        
+        Console.WriteLine();
+    }
+    
+}
+
+public class Point {
+    
+    private int X {get; set;}
+    private int Y {get; set;}
+
+    public Point(int x, int y) {
+        X = x;
+        Y = y;
+    }
+
+    public void ReflectInX() {
+        Y *= -1;
+    }
+
+    public void ReflectInY() {
+        X *= -1;
+    }
+    
+    public int Quadrant { 
+        get {
+
+        if(X > 0) {
+                if(Y > 0)
+                    return 0;
+                else
+                    return 3;
+            } else {
+                if(Y > 0)
+                    return 1;
+                else
+                    return 2;
+            }
+        }
+    }
+    
+    public override string ToString() {
+        return String.Format("{0} , {1}", X, Y);
+    }
+}
