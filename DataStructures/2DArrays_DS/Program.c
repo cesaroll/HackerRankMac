@@ -11,13 +11,13 @@ int main(){
     int size = 6;
     int op=4;
 
-    /*int arr[6][6];
+    int arr[6][6];
     for(int arr_i = 0; arr_i < 6; arr_i++){
        for(int arr_j = 0; arr_j < 6; arr_j++){
           
           scanf("%d",&arr[arr_i][arr_j]);
        }
-    }*/
+    }
 
     /*
     int arr[6][6] = {
@@ -27,7 +27,7 @@ int main(){
         {0, 0, 2, 4, 4, 0},
         {0, 0, 0, 2, 0, 0},
         {0, 0, 1, 2, 4, 0},
-    };*/
+    };
 
     int arr[6][6] = {
         {-1, -1, 0, -9, -2, -2},
@@ -48,6 +48,7 @@ int main(){
     }
 
     printf("\n\n");
+    */
 
     int first = 1;
     int max=0;
